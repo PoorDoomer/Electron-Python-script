@@ -26,3 +26,8 @@ userInput.addEventListener('keydown', (event) => {
     ipcRenderer.send('user-input', input);
   }
 });
+
+runButton.addEventListener('click', () => {
+    const filePath = scriptInput.files[0].path;
+    ipcRenderer.send('open-user-input-window', filePath);
+  });

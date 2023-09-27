@@ -3,7 +3,7 @@ const path = require('path');
 const { spawn } = require('child_process');
 
 let mainWindow;
-
+let userInputWindow;
 app.on('ready', () => {
   mainWindow = new BrowserWindow({
     width: 800,
@@ -41,5 +41,23 @@ app.on('ready', () => {
     ipcMain.on('user-input', (event, input) => {
       pythonProcess.stdin.write(input + '\n');
     });
+  });
+  ipcMain.on('open-user-input-window', (event) => {
+    userInputWindow = new BrowserWindow({
+      width: 400,
+      height: 200,
+      webPreferences: {
+        nodeIntegration: true,
+      contextIsolation: false, // Enable Node.js integration
+
+      },
+    });
+  
+    userInputWindow.loadFile(path.join(__dirname, 'user-input.html'));
+  });
+  ipcMain.on('user-input-submitted', (event, input) => {
+    if (pythonProcess) {
+      pythonProcess.stdin.write(input + '\n');
+    }
   });
 });
